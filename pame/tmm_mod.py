@@ -22,7 +22,7 @@ These functions are all imported into the main package (tmm) namespace,
 so you can call them with tmm.coh_tmm(...) etc.
 """
 
-from __future__ import division, print_function, absolute_import
+
 
 from numpy import cos, inf, zeros, array, exp, conj, nan, isnan
 
@@ -219,7 +219,7 @@ def vector_com_tmm(pol, n_matrix, d_list, angle, vacuum_wavelengths):
                         pame_output=True  #<<< IMPORTANT FOR MAKING PANEL
                         )
         
-        for key, val in result.items():
+        for key, val in list(result.items()):
             # First iteration
             if key not in optical_dict:
                 optical_dict[key] = [val]

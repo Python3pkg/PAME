@@ -1,8 +1,8 @@
 from traits.api import *
 from traitsui.api import *
 import numpy as np
-from basic_material import BasicMaterial
-from converter import SpectralConverter
+from .basic_material import BasicMaterial
+from .converter import SpectralConverter
 import scipy.interpolate as scinterp
 import os
 import logging

@@ -216,7 +216,7 @@ class LiveSearch ( HasTraits ):
     #-- Property Implementations -----------------------------------------------
 
     def _get_types_list(self): 
-        return self.ValidTypes.keys()
+        return list(self.ValidTypes.keys())
 
     @property_depends_on( 'search, case_sensitive' )
     def _get_filter ( self ):
@@ -315,7 +315,7 @@ class SourceFile ( HasTraits ):
         category defined in LiveSeach.  For .nk, this would be Sopra.  For .txt
         this would be Other.
         """
-        for key in self.live_search.ValidTypes.keys():
+        for key in list(self.live_search.ValidTypes.keys()):
             for value in self.live_search.ValidTypes[key]:
                 if self.file_ext in value:
                     return key

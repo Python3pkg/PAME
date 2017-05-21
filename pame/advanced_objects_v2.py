@@ -1,16 +1,16 @@
 from traits.api import *
 from traitsui.api import *
-from material_models import ABCMetalModel, DrudeBulk
-from interfaces import IMie, IMaterial, IMixer, IStorage
+from .material_models import ABCMetalModel, DrudeBulk
+from .interfaces import IMie, IMaterial, IMixer, IStorage
 from numpy import empty, array
 import os.path as op
 import math, cmath
-from mie_traits_v2 import bare_sphere, effective_sphere
-from material_models import Dispwater #<--- Used by double nanoparticle
-from composite_materials_v2 import SphericalInclusions_Disk, DoubleComposite #For inheritance
+from .mie_traits_v2 import bare_sphere, effective_sphere
+from .material_models import Dispwater #<--- Used by double nanoparticle
+from .composite_materials_v2 import SphericalInclusions_Disk, DoubleComposite #For inheritance
 
 from pame import XNK_dir
-from material_files import XNKFile
+from .material_files import XNKFile
 
 def free_path_correction():
     ''' Size correction for the reduced mean free path.  Cited in many papers, in fact I'm writing this from,
@@ -19,7 +19,7 @@ def free_path_correction():
 
 class NanoSphere(SphericalInclusions_Disk):
     '''Technically a nanosphere always needs a medium anyway, so make it composite object'''
-    from material_models import Dispwater
+    from .material_models import Dispwater
 
     mat_name = Str('Bare Nanosphere') #<-- Only used if auto name disabled
     FullMie = Instance(IMie)  #Used to compute scattering properties	
@@ -100,7 +100,7 @@ class NanoSphere(SphericalInclusions_Disk):
         out.update(self.MediumMaterial.allview_requested(prefix='medium'))
 
         if prefix:
-            out = dict( ('%s.%s' %(prefix, k), v) for k,v in out.items() )
+            out = dict( ('%s.%s' %(prefix, k), v) for k,v in list(out.items()) )
         return out
 
 
@@ -210,10 +210,10 @@ class DrudeNP_corrected(DrudeBulk, NanoSphere):
 
 class NanoSphereShell(NanoSphere):
     '''This is a single object, but it inherits from composite material to allow for trait changes and stuff to be understood'''		
-    from mie_traits_v2 import sphere_shell
-    from composite_materials_v2 import CompositeMaterial_Equiv, SphericalInclusions_Shell
-    from composite_plots import DoubleSview
-    from material_models import Constant
+    from .mie_traits_v2 import sphere_shell
+    from .composite_materials_v2 import CompositeMaterial_Equiv, SphericalInclusions_Shell
+    from .composite_plots import DoubleSview
+    from .material_models import Constant
     
     # bug in composite material name or something preventing this...
     mat_name = Str('AuNP & Shell')
@@ -392,7 +392,7 @@ class NanoSphereShell(NanoSphere):
         out.update(self.CoreShellComposite.allview_requested(prefix='core_shell'))
 
         if prefix:
-            out = dict( ('%s.%s' %(prefix, k), v) for k,v in out.items() )
+            out = dict( ('%s.%s' %(prefix, k), v) for k,v in list(out.items()) )
         return out
 
 

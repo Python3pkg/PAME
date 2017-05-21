@@ -4,11 +4,11 @@ from enable.api import ComponentEditor
 import re, os, sys
 from traits.api import *    #Not worth it to do otherwise
 from traitsui.api import *
-from basicplots import MaterialView, ScatterView
-from composite_plots import MultiView  
-from converter import SpectralConverter
-from main_parms import SpecParms
-from interfaces import IMaterial, IMie
+from .basicplots import MaterialView, ScatterView
+from .composite_plots import MultiView  
+from .converter import SpectralConverter
+from .main_parms import SpecParms
+from .interfaces import IMaterial, IMie
 from chaco.api import Plot
 import copy
 from pame.utils import complex_e_to_n, complex_n_to_e
@@ -104,7 +104,7 @@ class BasicMaterial(HasTraits):
         out = {'perm':self.mview}
         
         if prefix:
-            out = dict( ('%s.%s' %(prefix, k), v) for k,v in out.items() )
+            out = dict( ('%s.%s' %(prefix, k), v) for k,v in list(out.items()) )
         
         return out
 

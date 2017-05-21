@@ -1,7 +1,7 @@
 """ A set of plotting components for Fiber Reflectance, Dielectric material, scattering cross section.
 They each have special get/set methods for communicating with simulations in gensim and other
 getters and setter model components."""
-from __future__ import division
+
 
 from enable.api import Component, ComponentEditor
 from traits.api import HasTraits, Instance, Array, Property, CArray, Str, Float, Tuple, Any, Dict, List, \
@@ -14,7 +14,7 @@ from traitsui.api import Item, Group, View, Tabbed, Action, HGroup, InstanceEdit
 from chaco.api import ArrayPlotData, Plot, PlotAxis, HPlotContainer, ToolbarPlot, Legend
 from chaco.tools.api import *
 from numpy import where
-from interfaces import IView
+from .interfaces import IView
 from chaco.tools.api import RangeSelection, RangeSelectionOverlay
 from scipy.integrate import simps  #Simpson integration
 
@@ -27,9 +27,9 @@ import matplotlib as mpl
 import matplotlib.cm as cm
 
 # pame imports
-import config
-import globalparms
-from main_parms import SHARED_SPECPARMS
+from . import config
+from . import globalparms
+from .main_parms import SHARED_SPECPARMS
 
 def r3(x): return round(x, 3)
 
@@ -58,7 +58,7 @@ def empty_image():
 def _plotdata_empty(data):
     """ Checks plotdata.arrays to see if 'x' is the only key where values are populated."""
     is_empty = True
-    for k, v in data.arrays.items():
+    for k, v in list(data.arrays.items()):
         if k != 'x':
             if len(v) > 0:
                 is_empty = False
@@ -110,7 +110,7 @@ class OpticalView(HasTraits):
     refresh = Button  
     
     # Plot category (R, kz, A etc...)
-    choose = Enum(globalparms.header.keys())  # SHOULD DELEGATE OR HAVE ADAPTER     
+    choose = Enum(list(globalparms.header.keys()))  # SHOULD DELEGATE OR HAVE ADAPTER     
     chosen_name = Property(Str, depends_on='choose')
 
     # Metatraits to change plot selection depending on data type (eg R vs. kz's)
@@ -631,7 +631,7 @@ class ScatterView(ABCView):
             self.scatmax=self.compute_max_xy(self.Cscatt)
 
         except TypeError:  #Sometimes these inexplicably mess up, especially when loading in strange materials
-            print 'Cannot find max xy values in ext,abs,scattering cross sections'
+            print('Cannot find max xy values in ext,abs,scattering cross sections')
             pass        
 
 

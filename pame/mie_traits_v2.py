@@ -11,13 +11,13 @@ from numpy.lib import scimath as SM
 from numpy import linspace, empty
 from traits.api import HasTraits, Any, Instance, Array, CArray, Str, Float, Int, Button, Bool, Interface, implements, DelegatesTo, on_trait_change
 from traitsui.api import Item, Group, View, Tabbed, Action, HSplit, Include, HGroup, VGroup, InstanceEditor
-from basicplots import ScatterView 
-from main_parms import SpecParms
-from interfaces import IMaterial, IMie
-from material_models import DrudeBulk, Sellmeir, Dispwater
+from .basicplots import ScatterView 
+from .main_parms import SpecParms
+from .interfaces import IMaterial, IMie
+from .material_models import DrudeBulk, Sellmeir, Dispwater
 
 from pame import XNK_dir
-from material_files import XNKFile
+from .material_files import XNKFile
 import os.path as op
 from pame.main_parms import SHARED_SPECPARMS
 
@@ -154,7 +154,7 @@ class Mie(HasTraits):
         out = {'cross_sec':self.sview} 
         
         if prefix:
-            out = dict( ('%s.%s' %(prefix, k), v) for k,v in out.items() )
+            out = dict( ('%s.%s' %(prefix, k), v) for k,v in list(out.items()) )
         
         return out
 
@@ -346,7 +346,7 @@ class sphere_shell(bare_sphere, shell):
                      )
 
     def update_cross(self):
-        print 'full mie updating cross'
+        print('full mie updating cross')
         for i in range(self.ecore.shape[0]):
             ext_term=0.0
 	    scatt_term=0.0

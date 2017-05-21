@@ -1,4 +1,4 @@
-from simple_materials_adapter import BasicAdapter
+from .simple_materials_adapter import BasicAdapter
 
 class ABCCompAdapter(BasicAdapter):
         mat_class = 'mixed'  #<--- don't change, needed by layer editor

@@ -3,15 +3,15 @@ from traitsui.api import *
 import sys
 import math
 from numpy import empty, array, conj, inf
-from basicplots import OpticalView
-from main_parms import SpecParms, AngleParms
-from interfaces import IOptic, ILayer
+from .basicplots import OpticalView
+from .main_parms import SpecParms, AngleParms
+from .interfaces import IOptic, ILayer
 from scipy.integrate import simps
 import logging
-from tmm_mod import vector_com_tmm
+from .tmm_mod import vector_com_tmm
 import numpy as np
 from pandas import Panel
-import globalparms
+from . import globalparms
 
 
 class OpticalModelError(Exception):
@@ -107,7 +107,7 @@ class DielectricSlab(HasTraits):
         on the DataFrames, irregardless of a real or complex value in each columns.  We confirmed this works
         as expected, and when plotted, only the real part will be plotted anyway (default behavior of pandas plot).
         """
-        print 'recomputing optical stack'
+        print('recomputing optical stack')
 
         if self.Mode == 'S-polarized':
             pol = 's'

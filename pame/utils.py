@@ -56,7 +56,7 @@ def flatten_dict(d, *types):
     node_map = {}
     node_path = [] 
     def nodeRecursiveMap(d, node_path): 
-        for key, val in d.items():
+        for key, val in list(d.items()):
             if type(val) in types: 
                 node_map['.'.join(node_path + [key])] = val 
             if type(val) is dict: 
@@ -101,14 +101,14 @@ class AttrDict(dict):
             for key in value:
                 self.__setitem__(key, value[key])
         else:
-            raise TypeError, 'expected dict'
+            raise TypeError('expected dict')
 
     def __setitem__(self, key, value):
         if '.' in key:
             myKey, restOfKey = key.split('.', 1)
             target = self.setdefault(myKey, AttrDict())
             if not isinstance(target, AttrDict):
-                raise KeyError, 'cannot set "%s" in "%s" (%s)' % (restOfKey, myKey, repr(target))
+                raise KeyError('cannot set "%s" in "%s" (%s)' % (restOfKey, myKey, repr(target)))
             target[restOfKey] = value
         else:
             if isinstance(value, dict) and not isinstance(value, AttrDict):
@@ -122,7 +122,7 @@ class AttrDict(dict):
         myKey, restOfKey = key.split('.', 1)
         target = dict.__getitem__(self, myKey)
         if not isinstance(target, AttrDict):
-            raise KeyError, 'cannot get "%s" in "%s" (%s)' % (restOfKey, myKey, repr(target))
+            raise KeyError('cannot get "%s" in "%s" (%s)' % (restOfKey, myKey, repr(target)))
         return target[restOfKey]
 
     def __contains__(self, key):

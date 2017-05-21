@@ -1,9 +1,9 @@
 from traits.api import Str, HasTraits, Instance, Button, implements,\
      File, Property, Bool, Any, Enum
 from traitsui.api import View, Item, Group, Include, InstanceEditor, VGroup
-from interfaces import IMaterial, IAdapter
-from simple_materials_adapter import ABCFileAdapter
-from material_files import ABCExternal
+from .interfaces import IMaterial, IAdapter
+from .simple_materials_adapter import ABCFileAdapter
+from .material_files import ABCExternal
 import os.path as op
 import numpy as np
 

@@ -37,7 +37,7 @@ def json_numpy_obj_hook(dct):
     :return: (ndarray) if input was an encoded ndarray
     """
     if isinstance(dct, dict) and '__ndarray__' in dct:
-        print 'hi in here woo', dct
+        print('hi in here woo', dct)
         data = base64.b64decode(dct['__ndarray__'])
         return np.frombuffer(data, dct['dtype']).reshape(dct['shape'])
     return dct
@@ -57,7 +57,7 @@ def dump(*args, **kwargs):
     # Got tired of forgetting have to pass file object as first arg
     # so let it pass path as first argument
     args = list(args)
-    if isinstance(args[1], basestring): #<--- In dump, args[1] is fp
+    if isinstance(args[1], str): #<--- In dump, args[1] is fp
         args[1] = open(args[1], 'w')
     return json.dump(*args, **kwargs)
 
@@ -67,7 +67,7 @@ def load(*args, **kwargs):
     # Got tired of forgetting have to pass file object as first arg
     # so let it pass path as first argument
     args = list(args) 
-    if isinstance(args[0], basestring): #<--- In load, args[0] is fp
+    if isinstance(args[0], str): #<--- In load, args[0] is fp
         args[0] = open(args[0], 'r')
     return json.load(*args, **kwargs)
 
@@ -81,8 +81,8 @@ if __name__ == '__main__':
     dumped = dumps(two_level)
     result = loads(dumped)
     
-    print '\noriginal data', data
-    print '\nnested dict of dict complex array', two_level
-    print '\ndecoded nested data', result
+    print('\noriginal data', data)
+    print('\nnested dict of dict complex array', two_level)
+    print('\ndecoded nested data', result)
 
 

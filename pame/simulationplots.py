@@ -7,8 +7,8 @@ can be resurrected when in-house visualization and realtime chaco plotting is im
 
 from traits.api import Dict, Property, Any, Instance, HasTraits, List, cached_property, Int, Enum, Str
 from traitsui.api import Item, View, VGroup, ListStrEditor, HGroup
-from basicplots import OpticalView, MaterialView
-from interfaces import IView
+from .basicplots import OpticalView, MaterialView
+from .interfaces import IView
 import sys
 from operator import itemgetter
 
@@ -28,7 +28,7 @@ class GeneralSimStorage(HasTraits):
 	def _get_trials_keys(self): 
 		''' Stores trials keys in sorted fashion by number.  Because sort(str) will not properly store numerical order for A1 vs A11 vs A2 for example,
 		    this uses itemgetter to split the list, sort it by the integer value, then reassemble.'''
-		vals=[(key.split(self.trials_delimiter)[0], int( key.split(self.trials_delimiter)[1] ) ) for key in self.trials_dic.keys()]
+		vals=[(key.split(self.trials_delimiter)[0], int( key.split(self.trials_delimiter)[1] ) ) for key in list(self.trials_dic.keys())]
 		vals_sorted=sorted(vals, key=itemgetter(1))
 		return [j[0]+(self.trials_delimiter)+str(j[1]) for j in vals_sorted]
 
@@ -66,8 +66,8 @@ class CurveAnalysisStorage(GeneralSimStorage):
 	names=['glue','reeves','hugadams']
 	for name in names:
 		sys.path.append("/home/"+name+"/Dropbox/Curve_Analysis_Traits/Old_versions/Curve_analysis_traits_v3")
-	from rundata import RunData
-	from spec_data import spec_dtype
+	from .rundata import RunData
+	from .spec_data import spec_dtype
 	from numpy import array
 
 	#### Traits used to interface simulation results directly into the Curve Analysis programs ###
@@ -80,7 +80,7 @@ class CurveAnalysisStorage(GeneralSimStorage):
 		''' Format a file_data_info dictionary directly to be passed into a RunData object, which then builds curve analysis plots '''
 		if self.trials_keys != []:
 			xvalues=self.trials_dic[self.trials_keys[0]][0]  #Arbitrarily chosen
-			return {trial : [(self.array(zip(xvalues, self.trials_dic[trial][self.data_column]),
+			return {trial : [(self.array(list(zip(xvalues, self.trials_dic[trial][self.data_column])),
 					 dtype=self.spec_dtype)),()] for trial in self.trials_keys}
 		
 	def _curve_analysis_dic_changed(self):

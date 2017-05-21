@@ -17,7 +17,7 @@ Other important parameters in the program are stored in parms dictionary.
 Special methods like list_parms() and parms_to_csv() provide nice formats for readability."""
 
 # Python imports
-import cPickle, re 
+import pickle, re 
 #3rd party imports
 from traits.api import *
 from traitsui.api import message
@@ -27,12 +27,12 @@ import numpy as np
 import functools, types
 
 #Local imports
-from handlers import FileOverwriteDialog
+from .handlers import FileOverwriteDialog
 from pame import globalparms
-import customjson
-import custompp #<--- Custom pretty-print
+from . import customjson
+from . import custompp #<--- Custom pretty-print
 import logging
-import config
+from . import config
 
 ORIGINAL_getitem = Panel.__getitem__
 
@@ -167,7 +167,7 @@ class LayerSimParser(HasTraits):
             """ If iterable, returns min and max values as a range string,
             otherwise just returns value.  Useful for string formatting 
             objects of mixed arrays and floats"""
-            if isinstance(array_or_numeric, basestring):
+            if isinstance(array_or_numeric, str):
                 return array_or_numeric
             try:
                 return '%s(%s - %s)' % (type(array_or_numeric), 
@@ -186,24 +186,24 @@ class LayerSimParser(HasTraits):
         #panel_printout += '\n\t  ".primary_panel()" to access full panel'
         
         input_printout = 'Inputs:'
-        for k,v in self.inputs.items():
+        for k,v in list(self.inputs.items()):
             input_printout += '\n\t%s : %s' % (k, _smart_format(v) )
             
         about_printout = 'About:'
-        for k,v in self.about.items():
+        for k,v in list(self.about.items()):
             # TOTAL HACK FOR SINGLE ATTRIBUTE: Storage, which is dict
             if isinstance(v, dict): #or ORderedDIct
                 about_printout += '\n\t%s:\n' % (k)        
-                for subk, subv in v.items():
+                for subk, subv in list(v.items()):
                     about_printout += '\t\t%s : %s\n' % (subk, _smart_format(subv) )                            
             else:
                 about_printout += '\n\t%s : %s' % (k, _smart_format(v) )        
             
         static_printout = 'Static Parameters:'
         # Static is a dict of dicts
-        for mainkey in self.static.keys():
+        for mainkey in list(self.static.keys()):
             static_printout += '\n\t%s:' % mainkey
-            for k,v in self.static[mainkey].items():
+            for k,v in list(self.static[mainkey].items()):
                 static_printout += '\n\t\t%s : %s' % (k, _smart_format(v) )
                                          
 
@@ -249,7 +249,7 @@ class LayerSimParser(HasTraits):
             wavelengths = None
 
         # Try to convert to dataframes.   If fails on one step, should fail on all the steps
-        for step, data in self.primary.items():
+        for step, data in list(self.primary.items()):
             primary_of_df[step] = DataFrame(data, index=wavelengths)
         
         # Panel with as simulation variabless as major axis (ie A_avg, R_0)
@@ -266,13 +266,13 @@ class LayerSimParser(HasTraits):
 
         # REORIENTATION OF MINOR AXIS LABELS
         if minor_axis:
-            if isinstance(minor_axis, basestring):
+            if isinstance(minor_axis, str):
                 inputarray = self.inputs[minor_axis] # values like 50, 60, 70, so want prefix/?
-                newaxis = dict(zip(outpanel.minor_axis, inputarray)) 
+                newaxis = dict(list(zip(outpanel.minor_axis, inputarray))) 
                 # end of day, want basically {'step_1':'vfrac_0.5, 'step_2', 'vfrac_0.10' ...
                 if prefix:
                     # No delimiter (ie %s_%s) because prefix can set that eg prefix = layerd_ or layerd=
-                    newaxis = dict((k,'%s%.4f' % (prefix, v)) for k, v in newaxis.items())
+                    newaxis = dict((k,'%s%.4f' % (prefix, v)) for k, v in list(newaxis.items()))
             elif isinstance(minor_axis, int):
                 pass
             else:
@@ -289,13 +289,13 @@ class LayerSimParser(HasTraits):
         """ Saves active and passive parms.  Does not attempt to save dataframe, since it is constructed 
         upon the property call anyway. """
         with open(outfilename, 'wb') as o:
-            cPickle.dump(self, o)
+            pickle.dump(self, o)
 
     def load(self, path_or_fileobj):
         """ Load and set self.about, static, primary, results """
-        if isinstance(path_or_fileobj, basestring):
+        if isinstance(path_or_fileobj, str):
             path_or_fileobj = open(path_or_fileobj, 'r')        
-        sp = cPickle.load(path_or_fileobj)
+        sp = pickle.load(path_or_fileobj)
         self.copy_traits(sp, traits=['about',
                                      'static',
                                      'primary',

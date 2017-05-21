@@ -1,10 +1,10 @@
-from basic_material import BasicMaterial
-from material_models import Sellmeir, Dispwater, Air
+from .basic_material import BasicMaterial
+from .material_models import Sellmeir, Dispwater, Air
 from traits.api import *
 from traitsui.api import *	
-from interfaces import IMixer, IStorage, IMaterial
+from .interfaces import IMixer, IStorage, IMaterial
 import math
-from material_mixer_v2 import MG_Mod, Bruggeman, QCACP, MG, LinearSum
+from .material_mixer_v2 import MG_Mod, Bruggeman, QCACP, MG, LinearSum
 from pame.modeltree_v2 import SHARED_TREE
 import pame.config as pconfig
 
@@ -162,7 +162,7 @@ class CompositeMaterial(BasicMaterial):
         out.update(self.Material2.allview_requested(prefix='M2'))
         
         if prefix:
-            out = dict( ('%s.%s'%(prefix, k), v) for k,v in out.items() )              
+            out = dict( ('%s.%s'%(prefix, k), v) for k,v in list(out.items()) )              
         return out
 
 
@@ -173,7 +173,7 @@ class CompositeMaterial_Equiv(CompositeMaterial):
     core material and material 2 refers to the shell material.  Thus, the interpretation of inclusion/solvent
     is no longer valid!  Medium material never involved in this computation
     """
-    from material_mixer_v2 import EquivMethod, CustomEquiv
+    from .material_mixer_v2 import EquivMethod, CustomEquiv
     r_particle=Float(12)
     shell_width=Float(2)
     MixingStyle=Enum('Equivalence', 'Custom Equiv') 
@@ -709,7 +709,7 @@ class DoubleComposite(CompositeMaterial):
 
 if __name__ == '__main__':
 #	f=CompositeMaterial_Equiv()
-    from main_parms import SpecParms
+    from .main_parms import SpecParms
     f = DoubleComposite(specparms = SpecParms())
 #	f=SphericalInclusions_Disk()
     f.configure_traits()

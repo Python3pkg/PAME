@@ -20,17 +20,17 @@ from pandas import concat, Panel
 from numpy import array, empty
 
 # Local imports
-from handlers import FileOverwriteDialog, BasicDialog
-from simulationplots import ReflectanceStorage, ScattStorage, MaterialStorage
-from main_parms import SpecParms
-from interfaces import IMaterial, ISim
+from .handlers import FileOverwriteDialog, BasicDialog
+from .simulationplots import ReflectanceStorage, ScattStorage, MaterialStorage
+from .main_parms import SpecParms
+from .interfaces import IMaterial, ISim
 #from layer_editor import StackError
-import config
-import hackedvtree
-import customjson
-import utils
-from layer_editor import SHARED_LAYEREDITOR
-from simparser import LayerSimParser
+from . import config
+from . import hackedvtree
+from . import customjson
+from . import utils
+from .layer_editor import SHARED_LAYEREDITOR
+from .simparser import LayerSimParser
 
 WRAPWIDTH = 100 # Text characters for wrapping lines
 
@@ -112,7 +112,7 @@ class SimConfigure(HasTraits):
 
     #https://github.com/enthought/traitsui/blob/master/examples/demo/Standard_Editors/CheckListEditor_simple_demo.py
     #http://stackoverflow.com/questions/23650049/traitsui-checklisteditor-changing-the-case-of-values?rq=1 
-    choose_optics = List(editor=CheckListEditor(values = globalparms.header.keys(),  
+    choose_optics = List(editor=CheckListEditor(values = list(globalparms.header.keys()),  
                                                 cols=5), 
                          #format_func=lambda x: x.lower(), #<-- no works
                          value=globalparms.selected)
@@ -246,7 +246,7 @@ class SimConfigure(HasTraits):
         self.additional += self.translator[self.traitscommon]+'\n' #String
 
     def _get_translist(self): 
-        return self.translator.keys()      
+        return list(self.translator.keys())      
 
 
 class ABCSim(HasTraits):
@@ -391,7 +391,7 @@ class ABCSim(HasTraits):
 
     # a class tot
     def _get_translist(self): 
-        return self.translator.keys()  
+        return list(self.translator.keys())  
 
     def _get__completed(self):
         """ Inspect storage objects and infer if simulation ran successfully.  Basically
@@ -435,7 +435,7 @@ class ABCSim(HasTraits):
             sim_traits[str(obj.trait_name)]=obj.trait_array        #Simulation traits
                        #^^^ Remove unicode
 
-        for key in sim_traits.keys():
+        for key in list(sim_traits.keys()):
             _true_trait_val = _trait_name_map[key]
             try:
                 originals[key]=xgetattr(self.base_app, _true_trait_val)  #If trait found, store its original values
@@ -584,7 +584,7 @@ class LayerSimulation(ABCSim):
 
         """
 
-        print 'running sim with traits', self.simulation_traits.keys()
+        print('running sim with traits', list(self.simulation_traits.keys()))
 
         # for name brevity
         sconfig = self.configure_storage 
@@ -605,7 +605,7 @@ class LayerSimulation(ABCSim):
         # Begin iterations
         sorted_keys = []
         for i in range(self.inc):
-            for trait in self.simulation_traits.keys():
+            for trait in list(self.simulation_traits.keys()):
                 _true_trait = self._trait_namemap[trait]#<--- Trait stored in memory (ie b_app.layereditor.layer1...)
                 xsetattr(b_app, _true_trait, self.simulation_traits[trait][i]) #Object, traitname, traitvalue
 
@@ -626,7 +626,7 @@ class LayerSimulation(ABCSim):
             flat_attributes = []
 
             # How many layers in optical stack
-            layer_indicies = range(len(b_app.opticstate.ns)) #0,1,2,3,4 for 5 layers etc...            
+            layer_indicies = list(range(len(b_app.opticstate.ns))) #0,1,2,3,4 for 5 layers etc...            
 
             for attr in sconfig.choose_optics:
                 if attr in b_app.opticstate.optical_stack.minor_axis:
@@ -686,7 +686,7 @@ class LayerSimulation(ABCSim):
             resultsdict[stepname] = results_increment               
             primarydict[stepname] = primary_increment
 
-            print "Iteration\t", i+1, "\t of \t", self.inc, "\t completed"
+            print("Iteration\t", i+1, "\t of \t", self.inc, "\t completed")
 
         # SET STORAGE TRAITS
         self.primary = primarydict

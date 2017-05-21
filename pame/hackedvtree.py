@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 from traitsui.value_tree import TraitsNode, IntNode
 
 from traits.api import HasTraits, Any, Enum, List, Bool, Function, Str, \
@@ -42,7 +42,7 @@ def arraynode( parentnode, node, hide_privates=True,
      for name in names:
           try:
                item_value = getattr( value, name, '<unknown>' )
-          except Exception, excp:
+          except Exception as excp:
                item_value = '<%s>' % excp
 
           if hide_privates:
@@ -75,7 +75,7 @@ def numericnode( parentnode, node, hide_privates=True,
      for name in names: #<- name is trait name, value is actual valu in program
           try:
                item_value = getattr( value, name, '<unknown>' )
-          except Exception, excp:
+          except Exception as excp:
                item_value = '<%s>' % excp
 
           if hide_privates:
@@ -83,7 +83,7 @@ def numericnode( parentnode, node, hide_privates=True,
                   continue #<-- skip 
 
           if type(item_value) in allowed or isinstance(item_value, HasTraits):
-               print name, item_value, node_for, value
+               print(name, item_value, node_for, value)
                newnode = node_for( '.' + name, item_value ) 
                nodes.append( newnode )
                label = newnode.label

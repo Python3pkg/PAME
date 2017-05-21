@@ -2,9 +2,9 @@ from traitsui.api import TableEditor, ObjectColumn, ExpressionColumn,InstanceEdi
      View, Item, HGroup
 from traits.api import HasTraits, Instance, List, Button, Int, Property, Float, Any,\
      on_trait_change
-from main_parms import SHARED_SPECPARMS
-from layer_traits_v2 import * 
-from interfaces import ILayer, IMaterial
+from .main_parms import SHARED_SPECPARMS
+from .layer_traits_v2 import * 
+from .interfaces import ILayer, IMaterial
 from traitsui.table_filter \
      import EvalFilterTemplate, MenuFilterTemplate, RuleFilterTemplate, \
      EvalTableFilter
@@ -183,7 +183,7 @@ class LayerEditor(HasTraits):
             self.selected_layer = self.stack[self.selected_index]
 
         except (TypeError, AttributeError) as exc:  #If user selects none, or selects a folder object, not an actual selection
-            print 'In exception in layereditor change materal\n', self.stack[self.selected_index], self.selected_layer
+            print('In exception in layereditor change materal\n', self.stack[self.selected_index], self.selected_layer)
             raise exc
 
 
@@ -217,7 +217,7 @@ class LayerEditor(HasTraits):
         try:
             if type(self.selected_d)==float:
                 self.selected_layer.d=self.selected_d
-            elif type(self.selected_d)==unicode:
+            elif type(self.selected_d)==str:
                 new=str(self.selected_d.strip())
                 self.selected_layer.d=float(new)
         except ValueError:
@@ -225,7 +225,7 @@ class LayerEditor(HasTraits):
 
     @on_trait_change('solvent, solvent.material')        #WHEN SOLVENT CHANGES, SYNCS ALL SELECTED MATERIALS
     def sync_solvents(self):
-        print 'syncing solvs'
+        print('syncing solvs')
         for layer in self.stack:
             if layer.designator !='basic':
                 if layer.sync_status==True:	

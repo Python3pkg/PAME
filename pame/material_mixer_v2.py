@@ -10,9 +10,9 @@ from traitsui.api import *
 import math, sys
 import numpy as np
 import scipy.optimize
-from main_parms import SpecParms
-from interfaces import IMixer, IMie, IMaterial
-from material_models import Sellmeir, Dispwater
+from .main_parms import SpecParms
+from .interfaces import IMixer, IMie, IMaterial
+from .material_models import Sellmeir, Dispwater
 from mpmath import findroot
 
 from functools import partial

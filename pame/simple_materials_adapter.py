@@ -2,7 +2,7 @@
 from traits.api import Str, HasTraits, Instance, Button, implements, File, \
      Property, Bool, Any
 from traitsui.api import View, Item, Group, Include, InstanceEditor, VGroup
-from interfaces import IMaterial, IAdapter
+from .interfaces import IMaterial, IAdapter
 import os.path as op 
 
 class BasicAdapter(HasTraits):
@@ -35,7 +35,7 @@ class BasicAdapter(HasTraits):
         # but have infinite recursion if importing materials.  For example,
         # if composite materials needs to set materia1 to a composite material,
         # this will lead to recursive imports.
-        from materialapi import ALLMATERIALS
+        from .materialapi import ALLMATERIALS
         self.matobject = ALLMATERIALS[self.apikey]()
 
     def destroy_object(self):
@@ -85,7 +85,7 @@ class DispwaterAdapter(BasicAdapter):
     apikey = 'dispwater'
 
 class SellmeirAdapter(BasicAdapter):
-    from material_models import Sellmeir
+    from .material_models import Sellmeir
     name="Sellmeir Model (defaults to optical fiber glasss)"
     source="Gupta Paper" #CITE
     notes="Preserves Kramers Kronig relation"
@@ -117,7 +117,7 @@ class NKJsonAdapter(BasicAdapter):
     """
 
 class ABCFileAdapter(BasicAdapter):
-    from material_files import ABCExternal
+    from .material_files import ABCExternal
     source="N/A"
     notes="Basic File of unknown type"
     file_path = File
@@ -190,7 +190,7 @@ class ABCFileAdapter(BasicAdapter):
 
 
 class SopraFileAdapter(ABCFileAdapter):   
-    from material_files import SopraFile
+    from .material_files import SopraFile
     source="Sopra: http://www.sspectra.com/sopra.html"
     notes=""
     apikey='sopra'
@@ -199,7 +199,7 @@ class SopraFileAdapter(ABCFileAdapter):
         self.matobject = self.SopraFile(file_path=self.file_path)
         
 class XNKFileAdapter(ABCFileAdapter):
-    from material_files import XNKFile, XNKFileCSV
+    from .material_files import XNKFile, XNKFileCSV
     csv = Bool(False) 
     source="NK_Delimited"
     notes="Assumes real and imaginary parts of the index of refraction in "\

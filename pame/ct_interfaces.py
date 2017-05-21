@@ -1,5 +1,5 @@
 from traits.api import Interface, Dict, Str, Tuple, Array, Instance
-from spec_data import spec_dtype
+from .spec_data import spec_dtype
 
 class IRun(Interface):
 	""" Stores ordered series data from different types of input and formats them into the same object, file_data info. 

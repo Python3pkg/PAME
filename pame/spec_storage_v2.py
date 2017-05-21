@@ -3,12 +3,12 @@ from traits.api import HasTraits, Instance, Property, Array, Str, Enum, cached_p
 			Button 
 from traitsui.api import View, Item
 from chaco.api import ArrayPlotData
-from spec_data import spec_dtype
-from ct_interfaces import IRun, IRunStorage, IPlot
+from .spec_data import spec_dtype
+from .ct_interfaces import IRun, IRunStorage, IPlot
 from numpy import array, empty, linspace
-from run_plots_v2 import AbsPlot, SpecPlot, TimePlot#, AreaPlot
+from .run_plots_v2 import AbsPlot, SpecPlot, TimePlot#, AreaPlot
 from pandas import DataFrame
-from pandasplotdata import PandasPlotData
+from .pandasplotdata import PandasPlotData
 
 ############
 ## STILL USES OLD DATASTRUCTURE AND CONVERTS MERE THE MAKE_DFRAME() METHOD
@@ -84,7 +84,7 @@ class RunStorage(HasTraits):
 		self.dframe=DataFrame(self.twoD_data_full, list(self.x_label), list(self.t_label))
 		trans=self.dframe.T #Need to_string to print long rows
 		test=PandasPlotData(self.dframe)
-		print test.list_data(as_strings=True), 'here'
+		print(test.list_data(as_strings=True), 'here')
 
 
 		### MAY FIND THAT LOOKUP IS BEST METHOD TO USE FOR SAMPLING OPERATIONS
@@ -115,7 +115,7 @@ class RunStorage(HasTraits):
 	### reshaped in both rows and columns if only one dimension was changing
 	def _x_avg_changed(self): 
 		if self.averaging_style=='Reshaping':
-			print 'reshaping x'
+			print('reshaping x')
 			#Return factors to split by, like 1,2,5 for 10 element set corresponding to 
 			#no averaging, 50% average, 20%averaging.  Necessary because reshaping operations require
 			#factors.  So if I have 6 rows to start with, can end with 3 rows, averaging 2 at a time or 
@@ -124,7 +124,7 @@ class RunStorage(HasTraits):
 
 		elif self.averaging_style=='Rolling':
 #			validx=range(1, self.size/2) #Any valid number between 1 and half sample size
-			print 'Need to build the rolling average method'
+			print('Need to build the rolling average method')
 			pass	
 
 		#Row reshape (# rows to remain, row spacing, columns)
@@ -135,12 +135,12 @@ class RunStorage(HasTraits):
 
 	def _t_avg_changed(self):
 		if self.averaging_style=='Reshaping':
-			print 'reshaping t'
+			print('reshaping t')
 			self._valid_t_averages=_get_factors(len(self.t_label) )
 
 		elif self.averaging_style=='Rolling':
 #			validt=range(1, self.size/2) #Any valid number between 1 and half sample size
-			print 'Need to build the rolling average method'
+			print('Need to build the rolling average method')
 			pass	
 
 		#Col reshape (# rows to remain, row spacing, columns)
@@ -160,7 +160,7 @@ class RunStorage(HasTraits):
 		#### ALL LISTENERS ARE HOOKED UP, THIS FUNCTION IS PROBABLY CAUSING THE ISSUE... MAYBE
 		#### OVERWRITING THE DATA ARRAYS IS CAUSING THIS
 
-		print 'Updating all ctprimary data sources'
+		print('Updating all ctprimary data sources')
 	
 		specdata=ArrayPlotData() 
 		timedata=ArrayPlotData()
@@ -183,10 +183,10 @@ class RunStorage(HasTraits):
 	### Set defaults 
 	def update_plots(self):
 		''' Make list eventually and sync iterably '''
-		print 'updating plots from specstorage object'
+		print('updating plots from specstorage object')
 
 		if self.plots is None:
-			print 'making new plots in spec storage object'
+			print('making new plots in spec storage object')
 
 	#		plots=AreaPlot(plothandler=self)
 		#	plots=AbsPlot(plothandler=self)
@@ -202,7 +202,7 @@ class RunStorage(HasTraits):
 	### Properties that make arrays based on file_data_info dictionary ###
 	def update_t_label(self): 
 		'''Stores the files in a sorted (by name) fashion, used for parsing the data in a sorted manner and also for axis labels'''
-		sortlist=self.file_data_info.keys()
+		sortlist=list(self.file_data_info.keys())
 		sortlist.sort()
 		self.t_label=sortlist
 		self._t_size=len(self.t_label)
@@ -225,9 +225,9 @@ class RunStorage(HasTraits):
 
 		##Test for wrong keywords##
 		for key in kwargs:
-			if key not in valid.keys():
-				print '\n\n You entered key\t', key, '\tbut key must be one of the following:\t', \
-			               '\t'.join(key for key in valid.keys() ), '\n\n'
+			if key not in list(valid.keys()):
+				print('\n\n You entered key\t', key, '\tbut key must be one of the following:\t', \
+			               '\t'.join(key for key in list(valid.keys()) ), '\n\n')
 				invalid.append(key)
 
 		for key in invalid:kwargs.pop(key)  # Catches errors when users input wrong keywords
@@ -235,15 +235,15 @@ class RunStorage(HasTraits):
 		##Make sure new label is same length as old label
 		for key in kwargs:
 			if len(kwargs[key]) != len(valid[key]):  
-				print '\n\n You tried to update\t', key, '\tof length\t', len(kwargs[key]), \
-				       '\tbut the current value has length\t', len(valid[key]) 
+				print('\n\n You tried to update\t', key, '\tof length\t', len(kwargs[key]), \
+				       '\tbut the current value has length\t', len(valid[key])) 
 			else:
 				## Update correct trait, but also makes sure each entry is a string!##
 				valid[key]=[str(entry) for entry in kwargs[key]]  
 				### REQUIRES SETTING TRAITS!!!
 				### THIS MAY REQUIRE USING TRAIT.SET_ATTR
 
-		print 'updated labels for the following entries:\t', '\t'.join(key for key in kwargs.keys()), '\n\n'
+		print('updated labels for the following entries:\t', '\t'.join(key for key in list(kwargs.keys())), '\n\n')
 
 		self.update_plotdata()
 
@@ -268,14 +268,14 @@ class RunStorage(HasTraits):
 
 		elif self.averaging_style=='Rolling':
 #			validt=range(1, self.size/2) #Any valid number between 1 and half sample size
-			print 'Need to build the rolling average method'
+			print('Need to build the rolling average method')
 			pass	
 
 		#Row reshape (# rows to remain, row spacing, columns)
 		#So if 500 rows and user is averaging by 100, .reshape([5, 100, columns])
 		avgarray=self.twoD_data_full.reshape([self._x_size/self.x_avg, self.x_avg, self._t_size]).mean(1)  #First avg by rows
 	#	avgarray=avgarray.reshape().mean(2).transpose() #Then avg by columns (transpose is necessary, see bintest.py)
-		print avgarray.shape
+		print(avgarray.shape)
 		self.twoD_data_avg=avgarray
 	### Simple Return modules to reduce syntax
 	def get_wavelengths(self, afile): return self.file_data_info[afile][0]['wavelength']	

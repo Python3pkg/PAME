@@ -3,12 +3,12 @@
 from traits.api import Str, Dict, Property, cached_property, Enum, Bool, \
      HasTraits, List, Instance, implements, on_trait_change
 from traitsui.api import View, HGroup, Item, VGroup, ListStrEditor, InstanceEditor, CheckListEditor
-from interfaces import IMaterial, ICompositeView
+from .interfaces import IMaterial, ICompositeView
 from enable.api import ComponentEditor, Component
 from chaco.api import GridContainer, HPlotContainer, OverlayPlotContainer, Plot, ArrayPlotData
 
 ###
-from basicplots import ScatterView
+from .basicplots import ScatterView
 
 class MultiView(HasTraits):
     '''Used to store arbitrary plots and selection based on key/plot input'''
@@ -23,8 +23,8 @@ class MultiView(HasTraits):
 
     @cached_property
     def _get_plotname(self): 
-        print 'nameplot passed'
-        keys=self.nameplot.keys()
+        print('nameplot passed')
+        keys=list(self.nameplot.keys())
         if self.alphabetize == True:
             keys.sort()  #Consider using same techinque in gensim to sort string+int
         return keys          #If the need ever arises.

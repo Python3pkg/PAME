@@ -1,12 +1,12 @@
-from basic_material import BasicMaterial
-from material_models import Constant, Sellmeir, Cauchy, DrudeBulk, Dispwater, Air
-from material_files import SopraFile, XNKFile, XNKFileCSV
+from .basic_material import BasicMaterial
+from .material_models import Constant, Sellmeir, Cauchy, DrudeBulk, Dispwater, Air
+from .material_files import SopraFile, XNKFile, XNKFileCSV
 
-from composite_materials_v2 import \
+from .composite_materials_v2 import \
      CompositeMaterial, CompositeMaterial_Equiv,SphericalInclusions_Disk, \
      SphericalInclusions_Shell
 
-from advanced_objects_v2 import NanoSphere, NanoSphereShell, DoubleNanoparticle
+from .advanced_objects_v2 import NanoSphere, NanoSphereShell, DoubleNanoparticle
 
 
 # DOES NOT INCLUDE FILE ADAPTERS/MATERIALS.  EACH OF THOSE HAS SPECIAL KEYWORD
@@ -36,6 +36,6 @@ NANOMATERIALS = dict(nanosphere = NanoSphere,
                      doublenanoshell = DoubleNanoparticle)
 
 # This is proper way to merge dictionares 
-ALLMATERIALS = dict(SIMPLEMATERIALS.items() +
-                    COMPOSITEMATERIALS.items() +
-                    NANOMATERIALS.items())
+ALLMATERIALS = dict(list(SIMPLEMATERIALS.items()) +
+                    list(COMPOSITEMATERIALS.items()) +
+                    list(NANOMATERIALS.items()))

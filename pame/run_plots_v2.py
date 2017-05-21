@@ -5,7 +5,7 @@ from traitsui.api import Item, View, HGroup, VGroup, Group, Include
 from chaco.api import ArrayPlotData, ToolbarPlot, LabelAxis
 from chaco.tools.api import BetterSelectingZoom, PanTool
 from enable.api import ComponentEditor
-from ct_interfaces import IPlot, IRunStorage
+from .ct_interfaces import IPlot, IRunStorage
 
 ###
 from numpy import array
@@ -64,7 +64,7 @@ class AbstractPlot(HasTraits):
 	###Global Event Listeners
 	@on_trait_change('plotdata')
 	def redrawplot(self):  
-		print 'Plot detects data change'
+		print('Plot detects data change')
 		self.draw_plot()
 		self.update_lines()
 
@@ -104,7 +104,7 @@ class AbstractPlot(HasTraits):
 			validx.append(1)
 			validx.reverse()
 		elif self.x_samp_style=='Any':  #CHANGE THIS LATER TO ACTUALLY PRESENT A LIST OF PERCENTS (1, 2, 3, 4 ETC...)
-			validx=range(1, self.x_size/2) #Any valid number between 1 and half sample size
+			validx=list(range(1, self.x_size/2)) #Any valid number between 1 and half sample size
 		return validx
 
 	def _set_x_samples(self, x_samples):
@@ -122,7 +122,7 @@ class AbstractPlot(HasTraits):
 			validt.append(1)
 			validt.reverse()
 		elif self.t_samp_style=='Any':
-			validt=range(1, self.t_size/2) #Any valid number between 1 and half sample size
+			validt=list(range(1, self.t_size/2)) #Any valid number between 1 and half sample size
 		return validt
 
 	@cached_property
@@ -162,11 +162,11 @@ class AbstractPlot(HasTraits):
 		plot.tools.append(PanTool(plot))
 		zoom=BetterSelectingZoom(component=plot, tool_mode="box", always_on=False)
 		plot.overlays.append(zoom)
-		plot.index_axis=LabelAxis(plot, orientation='bottom', positions=range(self.x_axis_samples), 
+		plot.index_axis=LabelAxis(plot, orientation='bottom', positions=list(range(self.x_axis_samples)), 
 				labels=['X0', 'X1', 'X2', 'X3', 'X4', 'X5'], resizable='hv',
 				title=self.x_axis_title)
 
-		plot.value_axis= LabelAxis(plot, orientation='left', positions=range(self.t_axis_samples),
+		plot.value_axis= LabelAxis(plot, orientation='left', positions=list(range(self.t_axis_samples)),
 				 labels=['t1', 't2', 't3', 't4','t5', 't6'], resizable='hv', 
 				 title=self.t_axis_title)
 
@@ -196,7 +196,7 @@ class SpecPlot(AbstractPlot):
    	        super(SpecPlot, self).__init__(*args, **kwargs)
 
 	def update_lines(self):
-		print 'updating lines'
+		print('updating lines')
 
 		### CHANGES PLOTS BASED ON LOCAL VARIABLES ###
 
@@ -263,7 +263,7 @@ class AbsPlot(AbstractPlot):
 			if name != 'x':
 				self.plot.plot(("x", name), name=name, color=self.color)
 
-		print self.plot.plots, 'number of plots'
+		print(self.plot.plots, 'number of plots')
 
 		self.plot.request_redraw()  #Needed so still works after zooming
 
@@ -284,7 +284,7 @@ class TimePlot(AbstractPlot):
    	        super(TimePlot, self).__init__(*args, **kwargs)
 
 	def update_lines(self):
-		print 'updating lines'
+		print('updating lines')
 
 		### CHANGES PLOTS BASED ON LOCAL VARIABLES ###
 
@@ -316,10 +316,10 @@ class AbsPlotDEPRECATE(AbstractPlot):
 
 	### Get teh closest value in a list of similar value, ripped off from online ###
 	def closest(self, target, collection) :	
-		print 'target is', target
-		print 'collection is', collection
+		print('target is', target)
+		print('collection is', collection)
 		new= min((abs(target - i), i) for i in collection)[1]
-		print 'returing', new
+		print('returing', new)
 		return new
 
 	@on_trait_change('ref')
@@ -333,7 +333,7 @@ class AbsPlotDEPRECATE(AbstractPlot):
 
 		self.plotref=self.ref
 
-		print 'updating plotref', self.plotref
+		print('updating plotref', self.plotref)
 
 		newplots=[self.tlabel[i] for i in self.t_effective]
 		refplot=self.tlabel[self.plotref]

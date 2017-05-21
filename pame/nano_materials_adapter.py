@@ -1,4 +1,4 @@
-from simple_materials_adapter import BasicAdapter
+from .simple_materials_adapter import BasicAdapter
 
 class ABCNanoAdapter(BasicAdapter):
         mat_class = 'nano'

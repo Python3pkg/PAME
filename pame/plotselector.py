@@ -1,9 +1,9 @@
 from traits.api import Any, Enum, Dict, List, DelegatesTo, HasTraits, \
      Bool, Instance, on_trait_change, Property, Button
 from traitsui.api import Item, View, HGroup, VGroup
-from interfaces import IView, ICompositeView
-import utils as pamutils
-from layer_editor import SHARED_LAYEREDITOR
+from .interfaces import IView, ICompositeView
+from . import utils as pamutils
+from .layer_editor import SHARED_LAYEREDITOR
 
 
 # Probably could be done with less code.  Simply want to keep a mapping
@@ -67,7 +67,7 @@ class PlotSelector(HasTraits):
       
       # Special sorting for objects of form [a, a.b, b.c.e]...
       # http://stackoverflow.com/questions/28156414/sorting-strings-in-python-that-have-a-hierarchical-alphabetical-order
-      _plot_list = self.plot_dict.keys()
+      _plot_list = list(self.plot_dict.keys())
       _plot_list.sort(key=lambda v: (len(v.split('.')), v.split('.')))# 
       self._plot_list = _plot_list
       

@@ -2,12 +2,12 @@ import os, sys, re
 from traits.api import HasTraits, Enum, Dict, File, Directory, Array, Str, Property, cached_property, implements, \
      Int, Bool, Float, List, Tuple, cached_property, Instance
 from traitsui.api import View, Item, ArrayEditor, HGroup, VGroup
-from ct_interfaces import IRun
+from .ct_interfaces import IRun
 import numpy as np
 import glob
-from spec_data import load_spec, load_info, load_formatted_info, load_formatted_data, spec_dtype
+from .spec_data import load_spec, load_info, load_formatted_info, load_formatted_data, spec_dtype
 from pyface.api import warning
-from spec_storage_v2 import RunStorage
+from .spec_storage_v2 import RunStorage
 
 class RunData(HasTraits):
     ''' General class for storing data in a specific fashion.  Inheriting classes will change import/outport schemes but
@@ -86,10 +86,10 @@ class DeprecatedRunData(RunData):
         if self.formatted_datafile is not '' and self.formatted_timefile is not '':
             temp_data=load_formatted_info(self.formatted_timefile) #array full_info_dtype
             spec_data_dic=load_formatted_data(self.formatted_datafile) #filename_data
-            if self.file_consistency_test(list(temp_data['filename']), spec_data_dic.keys() ) == False:
+            if self.file_consistency_test(list(temp_data['filename']), list(spec_data_dic.keys()) ) == False:
         #		warning(self.control, "Salary too low.  Collect unemployment.", "Salary")
-                print '\nmistmatch found between timefile and data file filenames.\n  \
-					Data structures not built!\n'
+                print('\nmistmatch found between timefile and data file filenames.\n  \
+					Data structures not built!\n')
                 return
 
             xvalues=spec_data_dic.pop('#Wavelength')
@@ -97,7 +97,7 @@ class DeprecatedRunData(RunData):
                 timeindex=np.where(temp_data['filename']==afile)
                 file_data_info[afile]=[(),()]  #List of tuples
                 ###Force data into primary structure: this should be possible in one operation###
-                data_array=np.array(zip(xvalues, spec_data_dic[afile]), dtype=spec_dtype)
+                data_array=np.array(list(zip(xvalues, spec_data_dic[afile])), dtype=spec_dtype)
 
                 file_data_info[afile]=[(data_array), (temp_data[timeindex,:])] 
 
@@ -177,7 +177,7 @@ class SimulationRunData(RunData):
 
             ### Set file_data_info in a dictionary comprehension ###
             ### NOT SURE WHAT INFORMATION TO RECORD ABOUT THE DATA IN THE SECOND HEADER PLACEHOLDER... ###
-            self.file_data_info= {runs[i] : [(np.array(zip(xvalues, rundata[i]), dtype=spec_dtype) ) ,()] for i in range(len(runs))}
+            self.file_data_info= {runs[i] : [(np.array(list(zip(xvalues, rundata[i])), dtype=spec_dtype) ) ,()] for i in range(len(runs))}
 
 
 

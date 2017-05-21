@@ -55,5 +55,5 @@ if __name__ == '__main__':
 
 	f=DoubleScatterView(sv1=a.sview, sv2=b.sview)
 #	f.update(sv1=a.sview, sv2=b.sview)
-	print b.Cext	
+	print(b.Cext)	
 	f.configure_traits()

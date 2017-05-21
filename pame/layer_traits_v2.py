@@ -4,14 +4,14 @@ stuff associated with them.  The stack of layers is not controlled here; see lay
 from traits.api import *
 from traitsui.api import *
 from numpy import linspace
-from interfaces import ILayer, IMaterial
+from .interfaces import ILayer, IMaterial
 from traitsui.table_filter \
      import EvalFilterTemplate, MenuFilterTemplate, RuleFilterTemplate, \
      EvalTableFilter
-from main_parms import FiberParms, SpecParms
-from modeltree_v2 import Model
-from material_models import Dispwater, Sellmeir, Constant
-import globalparms
+from .main_parms import FiberParms, SpecParms
+from .modeltree_v2 import Model
+from .material_models import Dispwater, Sellmeir, Constant
+from . import globalparms
 
 class BasicLayer(HasTraits):
     '''Class used to store layer in an interactive tabular environment'''
@@ -46,7 +46,7 @@ class BasicLayer(HasTraits):
 
 class Composite(BasicLayer):
     ''' Layer of spherical inclusions '''
-    from composite_materials_v2 import SphericalInclusions_Disk
+    from .composite_materials_v2 import SphericalInclusions_Disk
 
     name=Str('Composite Bulk Material')
     material=Instance(IMaterial)
@@ -56,7 +56,7 @@ class Composite(BasicLayer):
     oldsolvent=Instance(IMaterial)  #Used for syncing layers, called by layer_editor
 
     def _material_default(self): 
-        from composite_materials_v2 import CompositeMaterial
+        from .composite_materials_v2 import CompositeMaterial
         return CompositeMaterial()#self.SphericalInclusions_Disk()
 
     def sync_solvent(self, solvent):
@@ -76,7 +76,7 @@ class Composite(BasicLayer):
 
 class Nanoparticle(Composite):
     ''' Layer of nanoparticle inclusions'''
-    from advanced_objects_v2 import NanoSphereShell
+    from .advanced_objects_v2 import NanoSphereShell
     name=Str('Nanosphere with Shell')
     material=Instance(IMaterial)	
     designator=Str('nanoparticle')

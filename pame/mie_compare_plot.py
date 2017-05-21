@@ -2,7 +2,7 @@ from enable.api import Component, ComponentEditor
 from traits.api import HasTraits, Instance, on_trait_change
 from traitsui.api import Item, Group, View
 from chaco.api import GridContainer, Plot, ToolbarPlot
-from basicplots import ScatterView 
+from .basicplots import ScatterView 
 
 ##########
 # Don't feel like doing it now, but this could be a very general program
@@ -27,9 +27,9 @@ class MieComparePlot(HasTraits):
 	def _plot1_default(self): return ToolbarPlot()
 
 	def _plot1_changed(self): 
-		print 'changed in mie_compare'
+		print('changed in mie_compare')
 
-		print self.plot1
+		print(self.plot1)
 
      #   container = GridContainer(padding=40, fill_padding=True,
       #                        bgcolor="lightgray", use_backbuffer=True,

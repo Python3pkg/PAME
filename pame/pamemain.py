@@ -8,17 +8,17 @@ from traitsui.api import *
 from enable.component_editor import ComponentEditor
 
 # Local imports
-import globalparms
-from main_parms import SHARED_SPECPARMS, FiberParms, EllipsometryParms, AngleParms
-from layer_editor import SHARED_LAYEREDITOR
-from opticalstack import DielectricSlab
-from basicplots import OpticalView
-from interfaces import IOptic, ILayer, IMaterial, IStorage, ISim
-from fiberview import ViewMlab, FiberView, EllispometryView
-from plotselector import PlotSelector
-from gensim import LayerSimulation, ABCSim, SimConfigure
-from handlers import WarningDialog
-import config
+from . import globalparms
+from .main_parms import SHARED_SPECPARMS, FiberParms, EllipsometryParms, AngleParms
+from .layer_editor import SHARED_LAYEREDITOR
+from .opticalstack import DielectricSlab
+from .basicplots import OpticalView
+from .interfaces import IOptic, ILayer, IMaterial, IStorage, ISim
+from .fiberview import ViewMlab, FiberView, EllispometryView
+from .plotselector import PlotSelector
+from .gensim import LayerSimulation, ABCSim, SimConfigure
+from .handlers import WarningDialog
+from . import config
 
 
 #http://stackoverflow.com/questions/27790572/traitsui-buggy-view-depending-on-os

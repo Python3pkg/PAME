@@ -9,20 +9,20 @@ from traits.api import *
 from traitsui.api \
      import Item, View, TreeEditor, TreeNode, OKCancelButtons, VSplit
 
-from interfaces import IAdapter
-from File_Finder import LiveSearch
+from .interfaces import IAdapter
+from .File_Finder import LiveSearch
 
-from simple_materials_adapter import BasicAdapter, SellmeirAdapter, ConstantAdapter, \
+from .simple_materials_adapter import BasicAdapter, SellmeirAdapter, ConstantAdapter, \
     DrudeBulkAdapter, SopraFileAdapter, DispwaterAdapter, XNKFileAdapter, CauchyAdapter, \
     AirAdapter
 
 # Adapters
-from yamlmaterials import YamlAdapter
-import composite_materials_adapter as cma
-import nano_materials_adapter as nma
+from .yamlmaterials import YamlAdapter
+from . import composite_materials_adapter as cma
+from . import nano_materials_adapter as nma
 
 from pame import sopra_dir, riinfo_dir, XNK_dir
-import config
+from . import config
 #http://code.enthought.com/projects/traits/docs/html/TUIUG/factories_advanced_extra.html
 
 # Instances
@@ -259,15 +259,15 @@ class Model( HasTraits ):
                 raise Exception('What kind of file id is %s' % file_id)
 
         # When entries in 'my_files' are removed, this syncs the dictionary
-        for key in self.FileDic.keys():
+        for key in list(self.FileDic.keys()):
             if key not in self.FileSearch.my_files:
                 del self.FileDic[key]
 
-        self.soprafiles= [self.FileDic[k] for k in self.FileDic.keys() if
+        self.soprafiles= [self.FileDic[k] for k in list(self.FileDic.keys()) if
                           k.fileclass =='Sopra']
 
         # nk files can be csv too, so have this workaround
-        self.nkfiles= [self.FileDic[k] for k in self.FileDic.keys() if
+        self.nkfiles= [self.FileDic[k] for k in list(self.FileDic.keys()) if
                        k.fileclass in ['XNK', 'XNK_csv']]
         self.update_tree()
 

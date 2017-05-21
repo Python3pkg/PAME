@@ -1,8 +1,8 @@
-from basic_material import BasicMaterial
+from .basic_material import BasicMaterial
 from traits.api import *
 from traitsui.api import *
 import numpy as np
-from utils import complex_e_to_n
+from .utils import complex_e_to_n
 
 class ABCMaterialModel(BasicMaterial):	
     source='Model'
@@ -213,7 +213,7 @@ class Metals_plasma(HasTraits):
         self.name='gold'
         self.lam_plasma=self.metals_dic[self.name][0]	
         self.lam_collis=self.metals_dic[self.name][1]
-        self.keys=(self.metals_dic.keys())     #WHAT IS THE TRAIT EQUIVALENT OF THIS?
+        self.keys=(list(self.metals_dic.keys()))     #WHAT IS THE TRAIT EQUIVALENT OF THIS?
 
 
 class ABCMetalModel(ABCMaterialModel):

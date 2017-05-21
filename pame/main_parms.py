@@ -1,13 +1,13 @@
-from __future__ import division
+
 
 from traits.api import *
 from traitsui.api import *
-from converter import SpectralConverter
+from .converter import SpectralConverter
 from numpy import linspace, sin, cos, empty, argsort
 import numpy as np
 
 # PAME imports
-import config
+from . import config
 
 class SpectralError(Exception):
     """ """
